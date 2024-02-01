@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+</head>
+<body>
+    <h2>Create Event</h2>
+
+    <form action="/create-event" method ="post">
+    <input type="text" name="title" placeholder="Title">
+    <input type="email" name="email" placeholder="Email">
+    <input type="date" name="date" placeholder="Date">
+    <input type="time" name="time" placeholder="Time">
+    <input type="text" name="description" placeholder="Description">
+    
+    <input type="submit" value="Send">
+    </form>
+<br>
+    <form action="/get-events" method="post">
+        <button type="submit" >My Events</button>
+    </form>
+<br>
+    <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+    
+</body>
+</html>
