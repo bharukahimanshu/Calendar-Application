@@ -6,13 +6,12 @@ const isAuthenticated = require('../middleware/authMiddleware');
 
 
 router.get('/', (req, res) => {
-    res.render('login');    
+    res.json('This is login page')   
 });
 
 
 router.get('/login', (req, res) => {
-    const errorMessage = 'The credentials you entered are incorrect!'; 
-    res.render('login', { errorMessage });
+    res.json('This is login page');
   });
   
 

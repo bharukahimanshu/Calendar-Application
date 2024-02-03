@@ -33,7 +33,7 @@ async function getEvents(req, res) {
 
     // Return the formatted events as JSON
     res.json(formattedEvents);
-    // res.json(eventIds);
+    
   } catch (error) {
     console.error('Error fetching events:', error);
     res.status(500).json({ message: 'Internal Server Error' });

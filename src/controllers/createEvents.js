@@ -18,6 +18,7 @@ async function createEvent(req, res){
       time:req.body.time,
       description:req.body.description,
       host: host._id, // Reference to the host user
+      
     };
 
     const createdEvent = await events.create(newEvent);

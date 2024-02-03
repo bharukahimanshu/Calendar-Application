@@ -7,43 +7,58 @@ async function signup(req, res) {
         const existingUser = await users.findOne({ email: req.body.email });
 
         if (existingUser) {
-            return res.send('Account with the provided email already exists');
+          return res.json({ message: 'User Exists' });
+
         }
 
         const hashedPassword = await hashPassword(req.body.password);
         const data = {
             email: req.body.email,
             password: hashedPassword,
+            name: req.body.name
         };
 
         await users.insertMany([data]);
-        res.send('Account created successfully!');
+        res.json({ message: 'Account created' });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
 
 const passportLoginMiddleware = passport.authenticate('local', {
-    successRedirect: '/create-event', // Redirect on successful login
-    failureRedirect: '/login', // Redirect on failed login
+    // successRedirect: '/create-event', // Redirect on successful login
+    // failureRedirect: '/login', // Redirect on failed login
     failureFlash: true, // Enable flash messages for failed login
   });
   
   function login(req, res, next) {
-    passportLoginMiddleware(req, res, (err) => {
-      // Custom handling of flash messages
-      const errorMessages = req.flash('error');
-  
-      if (errorMessages.length > 0) {
-        // Flash message is present, render login page with error message
-        return res.render('login', { errorMessage: errorMessages[0] });
+    passportLoginMiddleware(req, res, async (err) => {
+      try {
+          if (err) {
+              throw err;
+          }
+
+          // If no error, retrieve user information
+          const user = req.user;
+
+          const data = {
+            email: req.user.email,
+            name: req.user.name
+          };
+
+          if (!user) {
+              return res.status(401).json({ error: 'Authentication failed' });
+          }
+
+          // Return user information as JSON
+          res.status(200).json(data );
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
       }
-  
-      // No flash message, continue with the default behavior
-      next(err);
-    });
+  });
   }
 
   function logout(req, res) {
@@ -52,7 +67,7 @@ const passportLoginMiddleware = passport.authenticate('local', {
         console.error(err);
         return res.status(500).send('Internal Server Error');
       }
-      res.redirect('/signup'); 
+      res.redirect('/login'); 
     });
   }
     
@@ -71,17 +86,3 @@ module.exports = { signup, login, checkPassword, logout };
 
 
 
-// async function login(req, res) {
-//     try {
-//         const user = await users.findOne({ email: req.body.email });
-
-//         if (user && (await checkPassword(req.body.password, user.password))) {
-//             res.send('Login Successful');
-//         } else {
-//             res.send('Incorrect email or password');
-//         }
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// }
