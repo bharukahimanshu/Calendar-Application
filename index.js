@@ -8,6 +8,7 @@ const authRoutes = require('./src/routes/authRoutes.js');
 const createEvents= require('./src/routes/createEvents.js')
 const { connectToMongoDB } = require('./mongodb.js');
 const flash = require('connect-flash');
+const cors = require('cors');
 
 
 app.set('view engine', 'hbs');
@@ -17,6 +18,8 @@ app.use(express.json());
 app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
 
 app.use(flash());
+
+app.use(cors);
 
 app.use(passport.initialize());
 app.use(passport.session());
