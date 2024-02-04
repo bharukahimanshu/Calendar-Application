@@ -19,7 +19,7 @@ app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: tr
 
 app.use(flash());
 
-app.use(cors);
+app.use(cors());
 
 app.use(passport.initialize());
 app.use(passport.session());
