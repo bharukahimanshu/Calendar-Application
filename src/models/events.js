@@ -7,10 +7,10 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email: {
+    emails: [{
         type: String,
         required: true
-    },
+    }],
     date: {
         type: String,
         required: true

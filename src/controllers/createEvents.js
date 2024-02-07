@@ -1,31 +1,49 @@
-const events = require('../models/events')
-const users = require('../models/user')
+const events = require('../models/events');
+const users = require('../models/user');
 
-async function createEvent(req, res){
+async function createEvent(req, res) {
   try {
     const hostEmail = req.user.email;
-    const host = await users.findOne({ email: hostEmail }); 
-    const invitee = await users.findOne({ email: req.body.email });
-    
-    if (!invitee) {
-        return res.send('Account does not exist');
+    const host = await users.findOne({ email: hostEmail });
+
+    if (!host) {
+      return res.status(404).send('Host user not found');
     }
 
+    const emailList = req.body.emails;
+
+    if (!emailList || !Array.isArray(emailList)) {
+      return res.status(400).send('Invalid email list');
+    }
+
+    const inviteePromises = emailList.map(async (email) => {
+      const invitee = await users.findOne({ email });
+      if (!invitee) {
+        return res.status(404).send(`User with email ${email} not found`);
+      }
+      return invitee;
+    });
+
+    const invitees = await Promise.all(inviteePromises);
+
     const newEvent = {
-      title:req.body.title,
-      email:req.body.email,
-      date:req.body.date,
-      time:req.body.time,
-      description:req.body.description,
-      host: host._id, // Reference to the host user
-      
+      title: req.body.title,
+      emails: emailList,
+      date: req.body.date,
+      time: req.body.time,
+      description: req.body.description,
+      host: host._id,
     };
 
     const createdEvent = await events.create(newEvent);
 
-    // Update the user's events array with the reference to the new event
-    invitee.events.push(createdEvent._id);
-    await invitee.save();
+    // Update the events array for each invitee with the reference to the new event
+    const updatePromises = invitees.map(async (invitee) => {
+      invitee.events.push(createdEvent._id);
+      await invitee.save();
+    });
+
+    await Promise.all(updatePromises);
 
     res.send('Event added successfully!');
   } catch (error) {
@@ -33,7 +51,5 @@ async function createEvent(req, res){
     res.status(500).send('Internal Server Error');
   }
 }
-
-
 
 module.exports = createEvent;
