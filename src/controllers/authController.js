@@ -70,7 +70,16 @@ const passportLoginMiddleware = passport.authenticate('local', {
       res.redirect('/login'); 
     });
   }
-    
+  
+  function home(req, res) {
+    const userEmail = req.user.email;
+
+    res.json({
+        success: true,
+        message: 'You are logged in',
+        email: userEmail
+    });
+}
 
 async function hashPassword(password) {
     const saltRounds = 10;
@@ -82,7 +91,7 @@ async function checkPassword(password, hashedPassword) {
     return await bcrypt.compare(password, hashedPassword);
 }
 
-module.exports = { signup, login, checkPassword, logout };
+module.exports = { signup, login, checkPassword, logout, home };
 
 
 
