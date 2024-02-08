@@ -10,6 +10,7 @@ const createEvents= require('./src/routes/createEvents.js')
 const { connectToMongoDB } = require('./mongodb.js');
 const flash = require('connect-flash');
 const cors = require('cors');
+const eventDetails = require('./src/routes/eventDetails.js')
 
 
 app.set('view engine', 'hbs');
@@ -50,6 +51,7 @@ app.use('/', authRoutes);
 app.use('/', rsvp);
 
 app.use('/', createEvents);
+app.use('/', eventDetails);
 
 
 app.listen(3000, () => {

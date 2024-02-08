@@ -43,7 +43,7 @@ const Event = require('../models/events');
 async function getEvents (req, res){
   const userId = req.user._id;
   const user = await User.findById(userId)
-      .populate('eventsAttending eventInvitations');
+      .populate('eventsAttending eventInvitations maybeAttending');
   res.json(user);
 };
 
