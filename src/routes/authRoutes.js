@@ -20,7 +20,6 @@ router.get('/home', isAuthenticated, (req, res) => {
         // If not authenticated, send error response
         return res.status(401).json({ error: 'Not logged in' });
     }
-
     // If authenticated, proceed to controller function
     home(req, res);
 });

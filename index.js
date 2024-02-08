@@ -3,8 +3,9 @@ const app = express();
 const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
-const hbs = require('hbs');
-const authRoutes = require('./src/routes/authRoutes.js'); 
+const MongoStore = require('connect-mongo');
+const authRoutes = require('./src/routes/authRoutes.js');
+const rsvp = require('./src/routes/rsvp.js') 
 const createEvents= require('./src/routes/createEvents.js')
 const { connectToMongoDB } = require('./mongodb.js');
 const flash = require('connect-flash');
@@ -15,7 +16,19 @@ app.set('view engine', 'hbs');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+
+const mongoUrl = 'mongodb+srv://bharukahimanshu02:Mongo@calendar.ijsjeg2.mongodb.net/';
+
+app.use(session(
+    { secret: 'your-secret-key', 
+    resave: true, 
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl }),
+    cookie: {
+        secure: false, 
+        maxAge: 7 * 24 * 60 * 60 * 1000 
+      }
+ }));
 
 app.use(flash());
 
@@ -34,6 +47,7 @@ connectToMongoDB();
 
 // Use authentication routes
 app.use('/', authRoutes);
+app.use('/', rsvp);
 
 app.use('/', createEvents);
 
