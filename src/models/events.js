@@ -11,15 +11,15 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true
     }],
-    date: {
-        type: String,
+    startDate: {
+        type: Date,
         required: true
     },
-    time: {
-        type: String,
+    endDate: {
+        type: Date,
         required: true
-    }
-    ,
+    },
+
     description: {
         type: String,
         required: true
@@ -27,7 +27,19 @@ const eventSchema = new mongoose.Schema({
     host: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
-        required: true }
+        required: true },
+    
+    attendees: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    declined: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    maybe: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'}]  
 });
 
 const events = mongoose.model("events", eventSchema);

@@ -13,7 +13,26 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true  
     },
-    events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'events' }],
+    // events: [
+    //     { 
+    //         type: mongoose.Schema.Types.ObjectId, 
+    //         ref: 'events' 
+    //     }],
+    eventsAttending: [
+        { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'events' 
+        }],
+    maybeAttending: [
+        { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'events' 
+        }],
+    eventInvitations: [
+        { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'events' 
+        }],
 });
 
 const users = mongoose.model("users", UserSchema);

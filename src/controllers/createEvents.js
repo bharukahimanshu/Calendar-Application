@@ -29,8 +29,10 @@ async function createEvent(req, res) {
     const newEvent = {
       title: req.body.title,
       emails: emailList,
-      date: req.body.date,
-      time: req.body.time,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
       description: req.body.description,
       host: host._id,
     };
@@ -39,7 +41,7 @@ async function createEvent(req, res) {
 
     // Update the events array for each invitee with the reference to the new event
     const updatePromises = invitees.map(async (invitee) => {
-      invitee.events.push(createdEvent._id);
+      invitee.eventInvitations.push(createdEvent._id);
       await invitee.save();
     });
 
