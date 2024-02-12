@@ -13,8 +13,6 @@ router.get('/login', (req, res) => {
     res.json('This is login page');
 });
 
-
-
 router.get('/signup', (req, res) => {
     res.render('signup'); 
 });

@@ -9,7 +9,7 @@ const eventSchema = new mongoose.Schema({
     },
     emails: [{
         type: String,
-        required: true
+        required: false
     }],
     startDate: {
         type: Date,
@@ -22,7 +22,7 @@ const eventSchema = new mongoose.Schema({
 
     description: {
         type: String,
-        required: true
+        required: false
     },
     host: { 
         type: mongoose.Schema.Types.ObjectId, 

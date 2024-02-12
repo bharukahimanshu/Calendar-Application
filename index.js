@@ -7,6 +7,7 @@ const MongoStore = require('connect-mongo');
 const authRoutes = require('./src/routes/authRoutes.js');
 const rsvp = require('./src/routes/rsvp.js') 
 const createEvents= require('./src/routes/createEvents.js')
+const editEvents = require('./src/routes/editEvents.js')
 const home = require('./src/routes/home.js')
 const invitations= require('./src/routes/invitations.js')
 const { connectToMongoDB } = require('./mongodb.js');
@@ -65,6 +66,8 @@ app.use('/api', eventDetails);
 
 app.use('/api', home);
 app.use('/api', invitations);
+
+app.use('/api', editEvents);
 
 
 app.listen(3000, () => {

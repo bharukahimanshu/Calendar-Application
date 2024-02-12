@@ -5,9 +5,7 @@ const getEvents = require('../controllers/getEvents');
 const isAuthenticated = require('../middleware/authMiddleware');
 
 
-router.get('/get-events',isAuthenticated,  (req, res) => {
-    res.render('events');    
-});
+
 
 router.get('/create-event',isAuthenticated, (req, res) => {
     res.render('createEvent');    
@@ -15,6 +13,6 @@ router.get('/create-event',isAuthenticated, (req, res) => {
 
 router.post('/create-event',isAuthenticated, createEvent);
 
-router.post('/get-events', isAuthenticated, getEvents);
+router.get('/get-events', isAuthenticated, getEvents);
 
 module.exports=router;
