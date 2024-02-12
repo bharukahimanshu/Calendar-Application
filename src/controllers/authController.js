@@ -62,27 +62,25 @@ const passportLoginMiddleware = passport.authenticate('local', {
   });
   }
 
-function logouti(req, res) {
-  // isAuthenticated(req,res,() => {
-    req.logout((err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Internal Server Error');
-      }
-      res.json({message: 'Logged out'}); 
-    });
-  // })
-}
-  
-//   function home(req, res) {
-//     const userEmail = req.user.email;
+function logout(req, res){
+  // Check if user is authenticated
+  if (!req.isAuthenticated()) {
+      // If not authenticated, send error response
+      return res.status(401).json({ error: 'Not logged in' });
+  }
 
-//     res.json({
-//         success: true,
-//         message: 'You are logged in',
-//         email: userEmail
-//     });
-// }
+  if (req.isAuthenticated()) {
+      req.logout((err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send('Internal Server Error');
+          }
+          res.json({message: 'Logged out'}); 
+      });
+  }
+}
+
+  
 
 async function hashPassword(password) {
     const saltRounds = 10;
@@ -94,7 +92,7 @@ async function checkPassword(password, hashedPassword) {
     return await bcrypt.compare(password, hashedPassword);
 }
 
-module.exports = { signup, login, checkPassword, logouti };
+module.exports = { signup, login, checkPassword, logout };
 
 
 

@@ -1,9 +1,12 @@
-// mongoDB.js
 const mongoose = require('mongoose');
+
+require('dotenv').config();
+
+const connectionString = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}`;
 
 const connectToMongoDB = async () => {
     try {
-        await mongoose.connect("mongodb+srv://bharukahimanshu02:Mongo@calendar.ijsjeg2.mongodb.net/", {
+        await mongoose.connect(connectionString, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });

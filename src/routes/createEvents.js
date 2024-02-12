@@ -14,6 +14,7 @@ router.get('/create-event',isAuthenticated, (req, res) => {
 });
 
 router.post('/create-event',isAuthenticated, createEvent);
+
 router.post('/get-events', isAuthenticated, getEvents);
 
 module.exports=router;

@@ -7,18 +7,23 @@ const MongoStore = require('connect-mongo');
 const authRoutes = require('./src/routes/authRoutes.js');
 const rsvp = require('./src/routes/rsvp.js') 
 const createEvents= require('./src/routes/createEvents.js')
+const home = require('./src/routes/home.js')
+const invitations= require('./src/routes/invitations.js')
 const { connectToMongoDB } = require('./mongodb.js');
 const flash = require('connect-flash');
 const cors = require('cors');
 const eventDetails = require('./src/routes/eventDetails.js')
-
+require('dotenv').config();
 
 app.set('view engine', 'hbs');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Serve static files from the public directory
+app.use(express.static('public'));
 
-const mongoUrl = 'mongodb+srv://bharukahimanshu02:Mongo@calendar.ijsjeg2.mongodb.net/';
+
+const mongoUrl = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}`;
 
 app.use(session(
     { secret: 'your-secret-key', 
@@ -37,6 +42,7 @@ const corsOptions = {
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
     preflightContinue: true, 
   };
+
 app.use(cors(corsOptions));
 
 app.use(passport.initialize());
@@ -51,11 +57,14 @@ app.set('views', path.join(__dirname,'src','views'));
 connectToMongoDB();
 
 // Use authentication routes
-app.use('/', authRoutes);
-app.use('/', rsvp);
+app.use('/auth', authRoutes);
+app.use('/api', rsvp);
 
-app.use('/', createEvents);
-app.use('/', eventDetails);
+app.use('/api', createEvents);
+app.use('/api', eventDetails);
+
+app.use('/api', home);
+app.use('/api', invitations);
 
 
 app.listen(3000, () => {
