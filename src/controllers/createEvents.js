@@ -31,8 +31,6 @@ async function createEvent(req, res) {
       emails: emailList,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      startTime: req.body.startTime,
-      endTime: req.body.endTime,
       description: req.body.description,
       host: host._id,
     };

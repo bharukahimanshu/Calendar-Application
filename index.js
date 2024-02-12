@@ -22,8 +22,8 @@ const mongoUrl = 'mongodb+srv://bharukahimanshu02:Mongo@calendar.ijsjeg2.mongodb
 
 app.use(session(
     { secret: 'your-secret-key', 
-    resave: true, 
-    saveUninitialized: true,
+    resave: false, 
+    saveUninitialized: false,
     store: MongoStore.create({ mongoUrl }),
     cookie: {
         secure: false, 
@@ -32,8 +32,12 @@ app.use(session(
  }));
 
 app.use(flash());
-
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+    preflightContinue: true, 
+  };
+app.use(cors(corsOptions));
 
 app.use(passport.initialize());
 app.use(passport.session());

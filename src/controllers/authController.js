@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const users = require('../models/user');
 const passport = require('passport');
+const isAuthenticated = require('../middleware/authMiddleware');
 
 async function signup(req, res) {
     try {
@@ -28,8 +29,8 @@ async function signup(req, res) {
 
 
 const passportLoginMiddleware = passport.authenticate('local', {
-    // successRedirect: '/create-event', // Redirect on successful login
-    // failureRedirect: '/login', // Redirect on failed login
+    // successRedirect: 'http://localhost:5173/home', // Redirect on successful login
+    // failureRedirect: 'http://localhost:5173/', // Redirect on failed login
     failureFlash: true, // Enable flash messages for failed login
   });
   
@@ -61,25 +62,27 @@ const passportLoginMiddleware = passport.authenticate('local', {
   });
   }
 
-  function logout(req, res) {
-    req.logout(err => {
+function logouti(req, res) {
+  // isAuthenticated(req,res,() => {
+    req.logout((err) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Internal Server Error');
       }
-      res.redirect('/login'); 
+      res.json({message: 'Logged out'}); 
     });
-  }
-  
-  function home(req, res) {
-    const userEmail = req.user.email;
-
-    res.json({
-        success: true,
-        message: 'You are logged in',
-        email: userEmail
-    });
+  // })
 }
+  
+//   function home(req, res) {
+//     const userEmail = req.user.email;
+
+//     res.json({
+//         success: true,
+//         message: 'You are logged in',
+//         email: userEmail
+//     });
+// }
 
 async function hashPassword(password) {
     const saltRounds = 10;
@@ -91,7 +94,7 @@ async function checkPassword(password, hashedPassword) {
     return await bcrypt.compare(password, hashedPassword);
 }
 
-module.exports = { signup, login, checkPassword, logout, home };
+module.exports = { signup, login, checkPassword, logouti };
 
 
 
