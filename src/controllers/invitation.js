@@ -6,7 +6,7 @@ async function invitations(req, res){
         const userId = req.user._id;
     
         // Find the user by ID and populate the eventsAttending field
-        const user = await User.findById(userId).populate('eventInvitations', 'title host description startDate endDate attendees');
+        const user = await User.findById(userId).populate('eventInvitations', 'title _id host description startDate endDate attendees');
         
         // Extract the populated events from the user object
         const eventInvitations = user.eventInvitations;
