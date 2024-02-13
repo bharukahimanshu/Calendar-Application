@@ -10,6 +10,7 @@ const createEvents= require('./src/routes/createEvents.js')
 const editEvents = require('./src/routes/editEvents.js')
 const home = require('./src/routes/home.js')
 const invitations= require('./src/routes/invitations.js')
+const deleteEvent= require('./src/routes/deleteEvent.js')
 const { connectToMongoDB } = require('./mongodb.js');
 const flash = require('connect-flash');
 const cors = require('cors');
@@ -59,15 +60,20 @@ connectToMongoDB();
 
 // Use authentication routes
 app.use('/auth', authRoutes);
+
 app.use('/api', rsvp);
 
 app.use('/api', createEvents);
+
 app.use('/api', eventDetails);
 
 app.use('/api', home);
+
 app.use('/api', invitations);
 
 app.use('/api', editEvents);
+
+app.use('/api', deleteEvent);
 
 
 app.listen(3000, () => {
