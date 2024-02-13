@@ -45,6 +45,9 @@ async function createEvent(req, res) {
 
     await Promise.all(updatePromises);
 
+    host.eventsAttending.push(createdEvent._id);
+    await host.save();
+
     res.send('Event added successfully!');
   } catch (error) {
     console.error(error);
