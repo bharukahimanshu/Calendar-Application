@@ -17,12 +17,14 @@ const cors = require('cors');
 const eventDetails = require('./src/routes/eventDetails.js')
 require('dotenv').config();
 
-app.set('view engine', 'hbs');
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Serve static files from the public directory
-app.use(express.static('public'));
+const publicDirectoryPath = path.join(__dirname, 'public');
+
+// Set up middleware to serve static files
+app.use(express.static(publicDirectoryPath));
 
 
 const mongoUrl = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}`;
@@ -40,7 +42,7 @@ app.use(session(
 
 app.use(flash());
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
     preflightContinue: true, 
   };
@@ -75,6 +77,9 @@ app.use('/api', editEvents);
 
 app.use('/api', deleteEvent);
 
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+});
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');

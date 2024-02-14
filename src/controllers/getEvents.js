@@ -9,12 +9,14 @@ async function getEvents(req, res) {
 
     // Find the user by ID and populate the eventsAttending field
     const user = await User.findById(userId).populate('eventsAttending', 'title host description startDate endDate attendees');
-    
+    const maybe = await User.findById(userId).populate('maybeAttending', 'title host description startDate endDate attendees');
     // Extract the populated events from the user object
     const eventsAttending = user.eventsAttending; 
+    const maybeAttending = maybe.maybeAttending;
 
 
-    res.json(eventsAttending);
+
+    res.json({eventsAttending, maybeAttending});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
