@@ -6,7 +6,7 @@ const isAuthenticated = require('../middleware/authMiddleware');
 
 
 
-router.post('/signup', validateSignupForm, signup);
+router.post('/signup', signup);
 
 router.post('/login', login);
 
