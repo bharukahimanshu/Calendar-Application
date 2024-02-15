@@ -26,7 +26,7 @@ async function invitations(req, res) {
             description: event.description,
             startDate: event.startDate,
             endDate: event.endDate,
-            hostName: host.name, 
+            host: host._id, 
             hostEmail: host.email
           };
       }));

@@ -14,14 +14,14 @@ async function getEvents(req, res) {
       
     const eventsAttending = await Promise.all(events.map(async event => {
       const host = await User.findById(event.host);
-        
+
       return {
         _id: event._id,
         title: event.title,
         description: event.description,
         startDate: event.startDate,
         endDate: event.endDate,
-        hostName: host.name, 
+        host: host._id, 
         hostEmail: host.email
         };
     }));

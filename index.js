@@ -23,7 +23,7 @@ app.use(express.json());
 
 const publicDirectoryPath = path.join(__dirname, 'public');
 
-// Set up middleware to serve static files
+// // Set up middleware to serve static files
 app.use(express.static(publicDirectoryPath));
 
 
