@@ -7,6 +7,8 @@ const MongoStore = require('connect-mongo');
 const authRoutes = require('./src/routes/authRoutes.js');
 const rsvp = require('./src/routes/rsvp.js') 
 const createEvents= require('./src/routes/createEvents.js')
+const createTasks= require('./src/routes/createTasks.js')
+const getTasks= require('./src/routes/getTasks.js')
 const editEvents = require('./src/routes/editEvents.js')
 const home = require('./src/routes/home.js')
 const invitations= require('./src/routes/invitations.js')
@@ -79,6 +81,10 @@ app.use('/api', invitations);
 app.use('/api', editEvents);
 
 app.use('/api', deleteEvent);
+
+app.use('/api', createTasks);
+
+app.use('/api', getTasks);
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));

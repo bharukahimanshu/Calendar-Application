@@ -16,7 +16,8 @@ async function signup(req, res) {
         const data = {
             email: req.body.email,
             password: hashedPassword,
-            name: req.body.name
+            name: req.body.name,
+            phone_no: req.body.phone_no,
         };
 
         await users.insertMany([data]);
