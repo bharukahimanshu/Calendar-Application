@@ -18,6 +18,7 @@ async function signup(req, res) {
             password: hashedPassword,
             name: req.body.name,
             phone_no: req.body.phone_no,
+            role: req.body.role
         };
 
         await users.insertMany([data]);

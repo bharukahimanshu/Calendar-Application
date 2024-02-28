@@ -13,9 +13,15 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true  
     },
-    contactNo:{
+    phone_no:{
         type: String,
         required: true  
+    },
+    role:{
+        type: String,
+        enum: ['Admin', 'Agent'],
+        default: 'Agent'       
+
     },
 
     eventsAttending: [

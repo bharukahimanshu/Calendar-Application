@@ -17,11 +17,11 @@ const { connectToMongoDB } = require('./mongodb.js');
 const flash = require('connect-flash');
 const cors = require('cors');
 const eventDetails = require('./src/routes/eventDetails.js')
-const reminderService = require('./src/controllers/reminder.js');
+// const reminderService = require('./src/controllers/reminder.js');
 require('dotenv').config();
 
 
-reminderService.sendReminderEmails();
+// reminderService.sendReminderEmails();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
