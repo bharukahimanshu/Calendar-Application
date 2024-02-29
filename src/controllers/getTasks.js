@@ -43,24 +43,25 @@ async function getTasks(req, res) {
     };
 
     // Check if a date range is provided in the request body
-    if (req.body.startDate && req.body.endDate) {
+    if (req.query.startDate && req.query.endDate) {
       // Convert the start and end dates to UTC timezone (ignoring time)
       console.log("Range search")
-      const startLocalDate = new Date(req.body.startDate); // Assuming user inputs local dates
-      const endLocalDate = new Date(req.body.endDate); // Assuming user inputs local dates
+      const startLocalDate = new Date(req.query.startDate); // Assuming user inputs local dates
+      const endLocalDate = new Date(req.query.endDate); // Assuming user inputs local dates
+      console.log(startLocalDate);
+      console.log(endLocalDate);
   
       // Convert local dates to UTC dates by adding/subtracting the time zone offset
-      const startUTCDate = new Date(startLocalDate.getTime() - (startLocalDate.getTimezoneOffset() * 60000));
-      const endUTCDate = new Date(endLocalDate.getTime() - (endLocalDate.getTimezoneOffset() * 60000));
+      const startUTCDate = new Date(startLocalDate.getTime() + (startLocalDate.getTimezoneOffset() * 60000));
+      const endUTCDate = new Date(endLocalDate.getTime() + (endLocalDate.getTimezoneOffset() * 60000));
   
       // Update the query to find tasks within the specified date range
       defaultQuery.dueDate = {
-          $gte: startUTCDate.toISOString().split('T')[0],
-          $lte: new Date(endUTCDate.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0] // Increment endDate by one day to include tasks on endDate
+          $gte: startUTCDate.toISOString(),
+          $lte: new Date(endUTCDate.getTime() + 24 * 60 * 60 * 1000).toISOString() // Increment endDate by one day to include tasks on endDate
       };
   }
   console.log(defaultQuery);
-  console.log('Request Body:', req.body);
 
     // Query the database
     const tasks = await Task.find(defaultQuery);
