@@ -8,12 +8,16 @@ async function home(req, res){
     if (req.isAuthenticated()) {
         const userEmail = req.user.email;
         const userId = req.user._id;
-  
+        const userNo = req.user.phone_no;
+        const userRole = req.user.role;
+ 
         res.json({
             success: true,
             message: 'You are logged in',
             email: userEmail,
             id: userId,
+            role: userRole,
+            phone_no: userNo
         });
     }
   }
