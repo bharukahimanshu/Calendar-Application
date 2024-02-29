@@ -16,11 +16,12 @@ async function createTask(req, res) {
       title: req.body.title,
       description: req.body.description,
       dueDate: req.body.dueDate,
+      related_to: req.body.related_to,//user phone no
       status: req.body.status || 'Open', // Default is Open
-      creator: creator._id,
+      creator: creator._id     
     };
 
-    const createdTask = await tasks.create(newTask);
+    await tasks.create(newTask);
 
     res.send('Task created successfully!');
   } catch (error) {

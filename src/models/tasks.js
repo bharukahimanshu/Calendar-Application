@@ -18,10 +18,31 @@ const taskSchema = new mongoose.Schema({
     enum: ['Open', 'In-progress', 'Waiting', 'Closed'],
     default: 'Open'
   },
+  statusChangeHistory: [{
+      _id: false,
+      previousStatus: {
+          type: String,
+          enum: ['Open', 'In-progress', 'Waiting', 'Closed'],
+          required: true
+      },
+      newStatus: {
+          type: String,
+          enum: ['Open', 'In-progress', 'Waiting', 'Closed'],
+          required: true
+      },
+      timestamp: {
+          type: Date,
+          default: Date.now
+      }
+  }],
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Assuming you have a User model
     required: true
+  },
+  related_to:{
+    type: String,
+    default:'91123456789'  
   },
   createdAt: {
     type: Date,

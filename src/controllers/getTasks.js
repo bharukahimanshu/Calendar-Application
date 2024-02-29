@@ -26,15 +26,15 @@ async function getTasks(req, res) {
 
     // Get the local time of the user
     const userUTCTime = new Date();
-    // console.log(userUTCTime);
- 
-    // const userUTCDateTime = new Date(Date.UTC(userUTCTime.getUTCFullYear(), userUTCTime.getUTCMonth(), userUTCTime.getUTCDate()));
+
     const dateString = userUTCTime.toISOString();
  
     const userUTCDate = dateString.split('T')[0];;
     
     console.log(userUTCDate); // Output: "YYYY-MM-DD"
+
     // Default query to find tasks for today's date in UTC timezone
+    
     defaultQuery.dueDate = {
         // Filter tasks with dueDate equal to today's date in UTC (ignoring time)
         $gte: userUTCDate, // Today's date
@@ -42,11 +42,10 @@ async function getTasks(req, res) {
    
     };
 
-    
-
     // Check if a date range is provided in the request body
     if (req.body.startDate && req.body.endDate) {
       // Convert the start and end dates to UTC timezone (ignoring time)
+      console.log("Range search")
       const startLocalDate = new Date(req.body.startDate); // Assuming user inputs local dates
       const endLocalDate = new Date(req.body.endDate); // Assuming user inputs local dates
   
@@ -61,7 +60,8 @@ async function getTasks(req, res) {
       };
   }
   console.log(defaultQuery);
-  
+  console.log('Request Body:', req.body);
+
     // Query the database
     const tasks = await Task.find(defaultQuery);
 
@@ -71,7 +71,13 @@ async function getTasks(req, res) {
       description: task.description,
       dueDate: new Date(task.dueDate.getTime() - userUTCTime.getTimezoneOffset() * 60000), // Adjust dueDate to user's local time
       status: task.status,
-      creatorPhone: user.phone_no // Assuming phone_no is a field in the User model
+      creatorPhone: user.phone_no, // Assuming phone_no is a field in the User model
+      related_to: task.related_to,
+      statusChangeHistory: task.statusChangeHistory.map(change => ({
+        previousStatus: change.previousStatus,
+        newStatus: change.newStatus,
+        timestamp: new Date(change.timestamp.getTime() - userUTCTime.getTimezoneOffset() * 60000) // Adjust timestamp to user's local time
+      }))
     }));
 
     res.json(tasksInLocalTime);

@@ -48,7 +48,9 @@ const passportLoginMiddleware = passport.authenticate('local', {
 
           const data = {
             email: req.user.email,
-            name: req.user.name
+            name: req.user.name,
+            phone_no: req.user.phone_no,
+            role: req.user.role
           };
 
           if (!user) {
