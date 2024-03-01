@@ -2,20 +2,29 @@ const Task = require('../models//tasks');
 
 async function logStatusChange(taskId, previousStatus, newStatus) {
   try {
+    console.log('Logging status change...');
+    console.log('Task ID:', taskId);
+    console.log('Previous Status:', previousStatus);
+    console.log('New Status:', newStatus);
     const task = await Task.findById(taskId);
+    
+    // Check if the new status is different from the previous status
+    if (previousStatus !== newStatus) {
+      const statusChange = {
+        previousStatus,
+        newStatus,
+        timestamp: new Date(),
+      };
 
-    const statusChange = {
-      previousStatus,
-      newStatus,
-      timestamp: new Date(),
-    };
+      await Task.findByIdAndUpdate(taskId, {
+        $push: { statusChangeHistory: statusChange },
+      });
 
-    await Task.findByIdAndUpdate(taskId, {
-      $push: { statusChangeHistory: statusChange },
-    });
-
-    await task.save();
-    console.log('Status change logged successfully');
+      await task.save();
+      console.log('Status change logged successfully');
+    } else {
+      console.log('Status remains unchanged, not logging the status change');
+    }
 
   } catch (error) {
     console.error('Error logging status change:', error);

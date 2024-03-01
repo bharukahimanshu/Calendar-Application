@@ -26,20 +26,25 @@ async function getTasks(req, res) {
 
     // Get the local time of the user
     const userUTCTime = new Date();
+    // Get the current UTC time and convert it to IST
+    const userISTTime = new Date(Date.now() + 5.5 * 60 * 60 * 1000);
+    console.log(userISTTime);
+    userISTTime.setUTCHours(0, 0, 0, 0);
+    console.log(userISTTime);
 
-    const dateString = userUTCTime.toISOString();
- 
-    const userUTCDate = dateString.split('T')[0];;
-    
-    console.log(userUTCDate); // Output: "YYYY-MM-DD"
+    const endDate = new Date(userISTTime.getTime() + 86400000);
+    console.log(endDate);
 
-    // Default query to find tasks for today's date in UTC timezone
+    const startUTCTime = new Date(userISTTime.getTime() + userISTTime.getTimezoneOffset() * 60000);
+    // Convert endDate to UTC
+    const endUTCTime = new Date(endDate.getTime() + endDate.getTimezoneOffset() * 60000);
+
+    console.log(startUTCTime);
+    console.log(endUTCTime);
     
     defaultQuery.dueDate = {
-        // Filter tasks with dueDate equal to today's date in UTC (ignoring time)
-        $gte: userUTCDate, // Today's date
-        $lt: new Date(new Date(userUTCDate).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0] // Next day's date
-   
+      $gte: startUTCTime.toISOString(),
+      $lt: endUTCTime.toISOString()  
     };
 
     // Check if a date range is provided in the request body
@@ -48,8 +53,8 @@ async function getTasks(req, res) {
       console.log("Range search")
       const startLocalDate = new Date(req.query.startDate); // Assuming user inputs local dates
       const endLocalDate = new Date(req.query.endDate); // Assuming user inputs local dates
-      console.log(startLocalDate);
-      console.log(endLocalDate);
+      // console.log(startLocalDate);
+      // console.log(endLocalDate);
   
       // Convert local dates to UTC dates by adding/subtracting the time zone offset
       const startUTCDate = new Date(startLocalDate.getTime() + (startLocalDate.getTimezoneOffset() * 60000));
@@ -58,10 +63,15 @@ async function getTasks(req, res) {
       // Update the query to find tasks within the specified date range
       defaultQuery.dueDate = {
           $gte: startUTCDate.toISOString(),
-          $lte: new Date(endUTCDate.getTime() + 24 * 60 * 60 * 1000).toISOString() // Increment endDate by one day to include tasks on endDate
+          $lt: new Date(endUTCDate.getTime() + 24 * 60 * 60 * 1000).toISOString() // Increment endDate by one day to include tasks on endDate
       };
   }
-  console.log(defaultQuery);
+
+  if (req.query.phone_no) {
+    defaultQuery.related_to = req.query.phone_no;
+  }
+
+  // console.log(defaultQuery);
 
     // Query the database
     const tasks = await Task.find(defaultQuery);
