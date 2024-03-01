@@ -68,6 +68,7 @@ async function getTasks(req, res) {
   }
 
   if (req.query.phone_no) {
+    console.log("Phone number filter applied"); 
     defaultQuery.related_to = req.query.phone_no;
   }
 
@@ -81,19 +82,20 @@ async function getTasks(req, res) {
       const creatorId = task.creator;
       const creator = await User.findById(creatorId); // Wait for the promise to resolve
       return {
-          title: task.title,
-          description: task.description,
-          dueDate: new Date(task.dueDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
-          status: task.status,
-          creatorPhone: creator.phone_no,
-          creatorName: creator.name,
-          creatorMail: creator.email,
-          related_to: task.related_to,
-          statusChangeHistory: task.statusChangeHistory.map(change => ({
-              previousStatus: change.previousStatus,
-              newStatus: change.newStatus,
-              timestamp: new Date(change.timestamp.getTime() - userUTCTime.getTimezoneOffset() * 60000)
-          }))
+        _id:task._id,
+        title: task.title,
+        description: task.description,
+        dueDate: new Date(task.dueDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
+        status: task.status,
+        creatorPhone: creator.phone_no,
+        creatorName: creator.name,
+        creatorMail: creator.email,
+        related_to: task.related_to,
+        statusChangeHistory: task.statusChangeHistory.map(change => ({
+            previousStatus: change.previousStatus,
+            newStatus: change.newStatus,
+            timestamp: new Date(change.timestamp.getTime() - userUTCTime.getTimezoneOffset() * 60000)
+        }))
       };
   }));
   
