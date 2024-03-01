@@ -67,19 +67,26 @@ async function getTasks(req, res) {
     const tasks = await Task.find(defaultQuery);
 
     // Convert retrieved datetime values from UTC to the local time of the user
-    const tasksInLocalTime = tasks.map(task => ({
-      title: task.title,
-      description: task.description,
-      dueDate: new Date(task.dueDate.getTime() - userUTCTime.getTimezoneOffset() * 60000), // Adjust dueDate to user's local time
-      status: task.status,
-      creatorPhone: user.phone_no, // Assuming phone_no is a field in the User model
-      related_to: task.related_to,
-      statusChangeHistory: task.statusChangeHistory.map(change => ({
-        previousStatus: change.previousStatus,
-        newStatus: change.newStatus,
-        timestamp: new Date(change.timestamp.getTime() - userUTCTime.getTimezoneOffset() * 60000) // Adjust timestamp to user's local time
-      }))
-    }));
+    const tasksInLocalTime = await Promise.all(tasks.map(async task => {
+      const creatorId = task.creator;
+      const creator = await User.findById(creatorId); // Wait for the promise to resolve
+      return {
+          title: task.title,
+          description: task.description,
+          dueDate: new Date(task.dueDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
+          status: task.status,
+          creatorPhone: creator.phone_no,
+          creatorName: creator.name,
+          creatorMail: creator.email,
+          related_to: task.related_to,
+          statusChangeHistory: task.statusChangeHistory.map(change => ({
+              previousStatus: change.previousStatus,
+              newStatus: change.newStatus,
+              timestamp: new Date(change.timestamp.getTime() - userUTCTime.getTimezoneOffset() * 60000)
+          }))
+      };
+  }));
+  
 
     res.json(tasksInLocalTime);
   } catch (error) {
