@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const taskSchema = new mongoose.Schema({
   title: {
     type: String,
+    enum: ['Pediatric', 'Gynaecologist', 'Radiology', 'Neurology'],
     required: true
   },
   description: {
