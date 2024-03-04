@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const Task = require('../models/tasks');
+const Customer = require('../models/user');
 
 async function getTasks(req, res) {
   try {
@@ -72,8 +73,6 @@ async function getTasks(req, res) {
     defaultQuery.related_to = req.query.phone_no;
   }
 
-  // console.log(defaultQuery);
-
     // Query the database
     const tasks = await Task.find(defaultQuery);
 
@@ -91,6 +90,7 @@ async function getTasks(req, res) {
         creatorName: creator.name,
         creatorMail: creator.email,
         related_to: task.related_to,
+        customerId:task.customerId,
         statusChangeHistory: task.statusChangeHistory.map(change => ({
             previousStatus: change.previousStatus,
             newStatus: change.newStatus,

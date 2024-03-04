@@ -11,6 +11,7 @@ const createTasks= require('./src/routes/createTasks.js')
 const getTasks= require('./src/routes/getTasks.js')
 const editEvents = require('./src/routes/editEvents.js')
 const editTask = require('./src/routes/editTask.js')
+const updateDB = require('./src/routes/update.js')
 const home = require('./src/routes/home.js')
 const invitations= require('./src/routes/invitations.js')
 const deleteEvent= require('./src/routes/deleteEvent.js')
@@ -86,6 +87,8 @@ app.use('/api', deleteEvent);
 app.use('/api', createTasks);
 
 app.use('/api', getTasks);
+
+app.use('/api', updateDB);
 
 app.use('/api', editTask);
 

@@ -41,9 +41,13 @@ const taskSchema = new mongoose.Schema({
     ref: 'User', // Assuming you have a User model
     required: true
   },
+  customerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'customers', 
+    required: true
+  },
   related_to:{
     type: String,
-    default:'91123456789'  
   },
   createdAt: {
     type: Date,
