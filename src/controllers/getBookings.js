@@ -30,20 +30,35 @@ async function getBookings(req, res) {
     // Get the local time of the user
     const userUTCTime = new Date();
     // Get the current UTC time and convert it to IST
-    const userISTTime = new Date(Date.now() + 5.5 * 60 * 60 * 1000);
-    console.log(userISTTime);
-    userISTTime.setUTCHours(0, 0, 0, 0);
-    console.log(userISTTime);
+    // const userISTTime = new Date(Date.now() + 5.5 * 60 * 60 * 1000);
+    // console.log("userISTTime",userISTTime);
+    const offsetMinutes = userUTCTime.getTimezoneOffset();
+    // Calculate the local time by adding the offset to the UTC time
+    const userLocalTime = new Date(userUTCTime.getTime() - (offsetMinutes * 60000));
+    
+    // Convert the local time to ISO string format
+    const userLocalISOString = userLocalTime.toISOString();
+    
+    console.log("UserLocalTIme",userLocalISOString);
+    
+    // userISTTime.setUTCHours(0, 0, 0, 0);
+    // console.log("userISTTime", userISTTime);
+    userLocalTime.setUTCHours(0, 0, 0, 0);
+    console.log("userLocalTime",userLocalTime);
 
-    const endDate = new Date(userISTTime.getTime() + 86400000);
-    console.log(endDate);
+    // const endDate = new Date(userISTTime.getTime() + 86400000);
+    // console.log("endDate",endDate);
 
-    const startUTCTime = new Date(userISTTime.getTime() + userISTTime.getTimezoneOffset() * 60000);
+    const endDate = new Date(userLocalTime.getTime() + 86400000);
+    console.log("endLocalDate",endDate);
+
+    const startUTCTime = new Date(userLocalTime.getTime() + userLocalTime.getTimezoneOffset() * 60000);
     // Convert endDate to UTC
     const endUTCTime = new Date(endDate.getTime() + endDate.getTimezoneOffset() * 60000);
 
-    console.log(startUTCTime);
-    console.log(endUTCTime);
+
+    console.log("startUTCTime",startUTCTime);
+    console.log("endUTCTime",endUTCTime);
     
     defaultQuery.startDate = {
       $gte: startUTCTime.toISOString(),

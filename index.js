@@ -21,7 +21,9 @@ const eventDetails = require('./src/routes/eventDetails.js');
 const addService = require('./src/routes/addService.js');
 const addResource = require('./src/routes/addResource.js');
 const getServices = require('./src/routes/getServices.js');
-const getResources = require('./src/routes/getResources.js');
+const getAllResources = require('./src/routes/getAllResources.js');
+const fetchResources = require('./src/routes/fetchResources.js');
+const fetchSlots = require('./src/routes/fetchSlots.js');
 
 require('dotenv').config();
 
@@ -89,7 +91,13 @@ app.use('/api', addResource);
 
 app.use('/api', getServices);
 
-app.use('/api', getResources);
+app.use('/api', getAllResources);
+
+app.use('/api', fetchResources);
+
+app.use('/api', fetchSlots);
+
+
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public', 'index.html'));

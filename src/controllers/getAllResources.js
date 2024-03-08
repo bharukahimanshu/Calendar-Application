@@ -1,11 +1,9 @@
-const express = require('express');
-const router = express.Router();
 const Resources = require('../models/resources');
 const Service = require('../models/services'); // Require Service model
 const Booking = require('../models/bookings'); // Require Booking model
 
 // Route to get all resources with populated service and booking information
-router.get('/getResources', async (req, res) => {
+async function getAllResources(req, res){
   try {
     // Check if a specific resource ID is provided in the query parameters
     const resourceName = req.query.resource;
@@ -54,6 +52,6 @@ router.get('/getResources', async (req, res) => {
     console.error('Error fetching resources:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});
+};
 
-module.exports = router;
+module.exports = getAllResources;
