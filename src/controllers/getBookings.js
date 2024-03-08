@@ -1,8 +1,10 @@
 const User = require('../models/user');
-const Task = require('../models/tasks');
+const Bookings = require('../models/bookings');
 const Customer = require('../models/user');
+const Services = require('../models/services');
+const Resources = require('../models/resources');
 
-async function getTasks(req, res) {
+async function getBookings(req, res) {
   try {
     const userId = req.user._id;
     const user = await User.findById(userId);
@@ -15,10 +17,10 @@ async function getTasks(req, res) {
 
     // Check if user is admin
     if (user.role === 'Admin') {
-      // Admin can view all tasks
+      // Admin can view all bookings
       defaultQuery = {};
     } else if (user.role === 'Agent') {
-      // Agent can only view their own tasks
+      // Agent can only view their own bookings
       defaultQuery = { creator: userId };
     } else {
       // Unauthorized user role
@@ -43,7 +45,7 @@ async function getTasks(req, res) {
     console.log(startUTCTime);
     console.log(endUTCTime);
     
-    defaultQuery.dueDate = {
+    defaultQuery.startDate = {
       $gte: startUTCTime.toISOString(),
       $lt: endUTCTime.toISOString()  
     };
@@ -61,10 +63,10 @@ async function getTasks(req, res) {
       const startUTCDate = new Date(startLocalDate.getTime() + (startLocalDate.getTimezoneOffset() * 60000));
       const endUTCDate = new Date(endLocalDate.getTime() + (endLocalDate.getTimezoneOffset() * 60000));
   
-      // Update the query to find tasks within the specified date range
-      defaultQuery.dueDate = {
+      // Update the query to find bookings within the specified date range
+      defaultQuery.startDate = {
           $gte: startUTCDate.toISOString(),
-          $lt: new Date(endUTCDate.getTime() + 24 * 60 * 60 * 1000).toISOString() // Increment endDate by one day to include tasks on endDate
+          $lt: new Date(endUTCDate.getTime() + 24 * 60 * 60 * 1000).toISOString() // Increment endDate by one day to include bookings on endDate
       };
   }
 
@@ -73,38 +75,73 @@ async function getTasks(req, res) {
     defaultQuery.related_to = req.query.phone_no;
   }
 
+  if (req.query.status) {
+    console.log("Status filter applied"); 
+    defaultQuery.status = req.query.status;
+  }
+
+  if (req.query.resource) {
+    console.log("Resource filter applied");
+    const resource = await Resources.findOne({ name: req.query.resource });
+    if (resource) {
+        defaultQuery.resource = resource._id;
+    } else {
+        console.log("Resource not found");
+        return res.status(404).json({ error: 'Resource not found' });
+    }
+}
+
+if (req.query.service) {
+    console.log("Service filter applied");
+    const service = await Services.findOne({ name: req.query.service });
+    if (service) {
+        defaultQuery.service = service._id;
+    } else {
+        console.log("Service not found");
+        return res.status(404).json({ error: 'Service not found' });
+    }
+}
+
     // Query the database
-    const tasks = await Task.find(defaultQuery);
+    const bookings = await Bookings.find(defaultQuery);
 
     // Convert retrieved datetime values from UTC to the local time of the user
-    const tasksInLocalTime = await Promise.all(tasks.map(async task => {
-      const creatorId = task.creator;
+    const bookingsInLocalTime = await Promise.all(bookings.map(async booking => {
+      const creatorId = booking.creator;
       const creator = await User.findById(creatorId); // Wait for the promise to resolve
+      const serviceId= booking.service;
+      const service= await Services.findById(serviceId);
+      const resourceId = booking.resource;
+      const resource = await Resources.findById(resourceId);
+
+      
       return {
-        _id:task._id,
-        title: task.title,
-        description: task.description,
-        dueDate: new Date(task.dueDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
-        status: task.status,
+        _id:booking._id,
+        title: booking.title,
+        description: booking.description,
+        startDate: new Date(booking.startDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
+        status: booking.status,
         creatorPhone: creator.phone_no,
         creatorName: creator.name,
         creatorMail: creator.email,
-        related_to: task.related_to,
-        customerId:task.customerId,
-        statusChangeHistory: task.statusChangeHistory.map(change => ({
+        related_to: booking.related_to,
+        customerId:booking.customerId,
+        statusChangeHistory: booking.statusChangeHistory.map(change => ({
             previousStatus: change.previousStatus,
             newStatus: change.newStatus,
             timestamp: new Date(change.timestamp.getTime() - userUTCTime.getTimezoneOffset() * 60000)
-        }))
+        })),
+        service: service.name,
+        resource: resource.name
       };
   }));
   
 
-    res.json(tasksInLocalTime);
+    res.json(bookingsInLocalTime);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
 
-module.exports = getTasks;
+module.exports = getBookings;

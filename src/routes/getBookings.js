@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const getTasks = require('../controllers/getTasks');
+const getBookings = require('../controllers/getBookings');
 const isAuthenticated = require('../middleware/authMiddleware');
 
 
-router.get('/get-tasks', isAuthenticated, getTasks);
+router.get('/get-bookings', isAuthenticated, getBookings);
 
 module.exports=router;

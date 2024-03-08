@@ -13,14 +13,13 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: true  
     },
-    tasks: [
+    bookings: [
         { 
             type: mongoose.Schema.Types.ObjectId, 
-            ref: 'tasks' 
+            ref: 'bookings' // Assuming your model name for bookings is 'Booking'
         }]
-
 });
 
-const customers = mongoose.model("customers", customerSchema);
+const Customer = mongoose.model("Customer", customerSchema);
 
-module.exports = customers;
+module.exports = Customer;
