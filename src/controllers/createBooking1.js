@@ -19,7 +19,6 @@ async function createBooking(req, res) {
 
     if (!customer) {
       const newCustomer = {
-        name: req.body.name,
         phone_no: req.body.related_to
       };
       customer = await customers.create(newCustomer);

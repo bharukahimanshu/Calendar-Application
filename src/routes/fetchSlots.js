@@ -58,27 +58,33 @@ const localWorkingHours = workingHours.map(timeRange => {
     });
 
     // console.log(existingBookings);
-        
+       
 
     // Iterate through each time range for the day
     const availableTimeSlots = [];
     workingHours.forEach(timeRange => {
       
       const [startStr, endStr] = timeRange.split('-').map(time => time.trim());
-      const startUtc = moment.utc(startStr, 'HH:mm'); // Convert start time to UTC
-      const endUtc = moment.utc(endStr, 'HH:mm'); // Convert end time to UTC
-      console.log("startUTC", startUtc, "End UTC",endUtc);
+      console.log("-----------------------","startStr, endStr",startStr, endStr, "-----------------------");
+      // const startUtc = moment.utc(startStr, 'HH:mm'); // Convert start time to UTC
+
+      let currentDate = moment.utc(date);
+      const startUtc = moment.utc(`${currentDate.format('YYYY-MM-DD')} ${startStr}`, 'YYYY-MM-DD HH:mm');
+
+      
+      // const endUtc = moment.utc(endStr, 'HH:mm'); // Convert end time to UTC
+      const endUtc = moment.utc(`${currentDate.format('YYYY-MM-DD')} ${endStr}`, 'YYYY-MM-DD HH:mm');
+
+      console.log("startUtc",startUtc,"endUtc", endUtc);
+      // console.log(moment.utc(date).startOf('day'));
+      console.log("startUTCDate", startUTCDate);
     
       // Generate time slots within the working hours for the day
-      // let currentTime = moment.max(moment.utc(date).startOf('day'), startUtc);
-
-      let currentTime = startUtc;
-       // Start from the maximum of the start time and the beginning of the day in UTC
+      let currentTime = moment.max(startUTCDate, startUtc); // Start from the maximum of the start time and the beginning of the day in UTC
       while (currentTime.isBefore(endUtc)) {
-        console.log("Entered the while loop");
-        console.log("Current time:", currentTime);
+        console.log("Entered the loop");
         const endTime = moment(currentTime).add(duration, 'minutes'); // Add duration in minutes
-        console.log("endtime:", endTime);
+        console.log("Current Time is ", currentTime, "End Time:", endTime);
         // Convert time slots to local time for display
         const startTimeLocal = currentTime.local().format('HH:mm'); // Convert current time to local time
         const endTimeLocal = endTime.local().format('HH:mm'); // Convert end time to local time
@@ -95,12 +101,13 @@ const localWorkingHours = workingHours.map(timeRange => {
           availableTimeSlots.push({
             // startTime: currentTime.utc().format('HH:mm'), // Store start time in UTC
             // endTime: endTime.utc().format('HH:mm') // Store end time in UTC
+
             startTime: startTimeLocal, // Store start time in UTC
-            endTime: endTimeLocal // Store end time in UTC
+            endTime: endTimeLocal// Store end time in UTC
           });
         }
         else{
-          console.log("skipped")
+          console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx","Skipped:",currentTime.utc().format('HH:mm'), startTimeLocal, endTime.utc().format('HH:mm'),endTimeLocal,"xxxxxxxxxxxxxxxxxxxxxxxxxxx");
         }
     
         // Move to the next time slot
