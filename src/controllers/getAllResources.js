@@ -42,7 +42,8 @@ async function getAllResources(req, res){
         name: resource.name,
         description: resource.description,
         services: services.filter(Boolean), // Filter out null values
-        bookings: bookings.filter(Boolean) // Filter out null values
+        bookings: bookings.filter(Boolean),
+        duration: bookings.duration // Filter out null values
       };
     }));
 

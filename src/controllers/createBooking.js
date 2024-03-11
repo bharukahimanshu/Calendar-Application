@@ -52,14 +52,14 @@ async function createBooking(req, res) {
       return res.status(400).send('Selected resource does not belong to the selected service');
     }
     console.log(req.body.startDate);
-    const date = new Date(req.body.startDate)
-    const bookingStartDateUTC = date;
+    const startDate = new Date(req.body.startDate);
+    const endDate = new Date(req.body.endDate);
+    const bookingStartDateUTC = startDate;
     console.log(bookingStartDateUTC);
-    const durationInMinutes = service.duration;
-    const bookingEndDateUTC = new Date(date.getTime() + durationInMinutes * 60000)
+    const bookingEndDateUTC = endDate;
     console.log(bookingEndDateUTC); 
-    // + durationInMinutes * 60000;
-
+    
+    
     // Check if there are any existing bookings for the selected Resource during the calculated time slot
     const existingBookings = await bookings.find({
       resource: resource._id,

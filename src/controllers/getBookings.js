@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const Bookings = require('../models/bookings');
-const Customer = require('../models/user');
 const Services = require('../models/services');
 const Resources = require('../models/resources');
 
@@ -75,10 +74,12 @@ async function getBookings(req, res) {
       // console.log(endLocalDate);
   
       // Convert local dates to UTC dates by adding/subtracting the time zone offset
+
       const startUTCDate = new Date(startLocalDate.getTime() + (startLocalDate.getTimezoneOffset() * 60000));
       const endUTCDate = new Date(endLocalDate.getTime() + (endLocalDate.getTimezoneOffset() * 60000));
   
       // Update the query to find bookings within the specified date range
+      
       defaultQuery.startDate = {
           $gte: startUTCDate.toISOString(),
           $lt: new Date(endUTCDate.getTime() + 24 * 60 * 60 * 1000).toISOString() // Increment endDate by one day to include bookings on endDate
@@ -135,6 +136,7 @@ if (req.query.service) {
         title: booking.title,
         description: booking.description,
         startDate: new Date(booking.startDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
+        endDate:new Date(booking.endDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
         status: booking.status,
         creatorPhone: creator.phone_no,
         creatorName: creator.name,

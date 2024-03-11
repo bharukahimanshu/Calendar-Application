@@ -24,6 +24,9 @@ const getServices = require('./src/routes/getServices.js');
 const getAllResources = require('./src/routes/getAllResources.js');
 const fetchResources = require('./src/routes/fetchResources.js');
 const fetchSlots = require('./src/routes/fetchSlots.js');
+const editService = require('./src/routes/editService.js');
+const editResource = require ('./src/routes/editResource.js');
+const addResourceToService = require('./src/routes/addResourceToService.js')
 
 require('dotenv').config();
 
@@ -96,6 +99,12 @@ app.use('/api', getAllResources);
 app.use('/api', fetchResources);
 
 app.use('/api', fetchSlots);
+
+app.use('/api', editService);
+
+app.use('/api', editResource);
+
+app.use('/api', addResourceToService);
 
 
 

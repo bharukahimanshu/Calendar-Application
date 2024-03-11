@@ -12,11 +12,7 @@ const serviceSchema = new mongoose.Schema({
   resource: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'resource'
-  }],
-  duration: {
-    type: Number,
-    required: true // Assuming duration is required for each resoure
-},
+  }]
 });
 
 const Service = mongoose.model('Service', serviceSchema);
