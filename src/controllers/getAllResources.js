@@ -5,9 +5,9 @@ const Booking = require('../models/bookings'); // Require Booking model
 // Route to get all resources with populated service and booking information
 async function getAllResources(req, res){
   try {
-    // Check if a specific resource ID is provided in the query parameters
+    // Check if a specific resource ID is provided in th  e query parameters
     const resourceName = req.query.resource;
-    console.log(resourceName);
+    console.log("resourceNames",resourceName);
 
     // If no resource name is provided in the query, fetch all resources
     let resources;
@@ -45,7 +45,8 @@ async function getAllResources(req, res){
         bookings: bookings.filter(Boolean),
         duration: bookings.duration, // Filter out null values
         email: resource.email,
-        phone_no: resource.phone_no
+        phone_no: resource.phone_no,
+        workingHours:resource.workingHours
       };
     }));
 

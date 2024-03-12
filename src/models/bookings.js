@@ -19,19 +19,19 @@ const bookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Open', 'In-progress', 'Waiting', 'Closed'],
-    default: 'Open'
+    enum: ['Pending', 'Confirmed', 'Cancelled', 'Closed'],
+    default: 'Pending'
   },
   statusChangeHistory: [{
     _id: false,
     previousStatus: {
       type: String,
-      enum: ['Open', 'In-progress', 'Waiting', 'Closed'],
+      enum: ['Pending', 'Confirmed', 'Cancelled', 'Closed'],
       required: true
     },
     newStatus: {
       type: String,
-      enum: ['Open', 'In-progress', 'Waiting', 'Closed'],
+      enum: ['Pending', 'Confirmed', 'Cancelled', 'Closed'],
       required: true
     },
     timestamp: {

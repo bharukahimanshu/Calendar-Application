@@ -21,7 +21,7 @@ async function addResource(req, res){
       // }
       
 
-      console.log(utcWorkingHours);
+      
       const newResourceData = {
         name: name,
         description: description,

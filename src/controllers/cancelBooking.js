@@ -1,7 +1,9 @@
 const Booking = require('../models/bookings');
 const Resource = require('../models/resources');
+const logStatusChange = require('../controllers/statusLogger');
 
 // DELETE route to cancel a booking
+
 async function cancelBooking(req, res){
   try {
     const bookingId = req.params.bookingId;
@@ -27,9 +29,15 @@ async function cancelBooking(req, res){
     await resource.save();
 
     // Delete the booking
-    await Booking.findByIdAndDelete(bookingId);
+    // await Booking.findByIdAndDelete(bookingId);
 
-    res.json({ message: 'Booking canceled successfully' });
+    const previousStatus= booking.status;
+    booking.status = 'Cancelled';
+    await logStatusChange(bookingId, previousStatus, booking.status);
+
+    await booking.save();
+
+    res.json({ message: 'Booking cancelled successfully!' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

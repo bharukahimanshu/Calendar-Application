@@ -28,7 +28,7 @@ const editService = require('./src/routes/editService.js');
 const editResource = require ('./src/routes/editResource.js');
 const addResourceToService = require('./src/routes/addResourceToService.js')
 const cancelBooking = require('./src/routes/cancelBooking.js')
-
+const deleteResource = require('./src/routes/deleteResource.js')
 require('dotenv').config();
 
 app.use(express.urlencoded({ extended: false }));
@@ -108,6 +108,8 @@ app.use('/api', editResource);
 app.use('/api', addResourceToService);
 
 app.use('/api', cancelBooking);
+
+app.use('/api', deleteResource);
 
 
 app.get('*', (req, res) => {
