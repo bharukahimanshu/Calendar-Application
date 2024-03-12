@@ -27,6 +27,7 @@ const fetchSlots = require('./src/routes/fetchSlots.js');
 const editService = require('./src/routes/editService.js');
 const editResource = require ('./src/routes/editResource.js');
 const addResourceToService = require('./src/routes/addResourceToService.js')
+const cancelBooking = require('./src/routes/cancelBooking.js')
 
 require('dotenv').config();
 
@@ -106,6 +107,7 @@ app.use('/api', editResource);
 
 app.use('/api', addResourceToService);
 
+app.use('/api', cancelBooking);
 
 
 app.get('*', (req, res) => {

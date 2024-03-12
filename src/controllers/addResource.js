@@ -3,27 +3,29 @@ const moment = require('moment');
 
 async function addResource(req, res){
     try {
-      const { name, email, phone_no, description, workingHours} = req.body;
+      const { name, email, phone_no, description, duration} = req.body;
     
       // Create a new resource instance
-
-      const utcWorkingHours = {};
-        Object.keys(workingHours).forEach(day => {
-            utcWorkingHours[day] = workingHours[day].map(timeRange => {
-                const [startTime, endTime] = timeRange.split('-').map(time => {
-                    const [hours, minutes] = time.trim().split(':');
-                    const localTime = moment().set({ hour: parseInt(hours), minute: parseInt(minutes) });
-                    return localTime.utc().format('HH:mm');
-                });
-                return `${startTime} - ${endTime}`;
-            });
-        });
+      // if(req.body.workingHours){
+      //   const utcWorkingHours = {};
+      //   Object.keys(workingHours).forEach(day => {
+      //       utcWorkingHours[day] = workingHours[day].map(timeRange => {
+      //           const [startTime, endTime] = timeRange.split('-').map(time => {
+      //               const [hours, minutes] = time.trim().split(':');
+      //               const localTime = moment().set({ hour: parseInt(hours), minute: parseInt(minutes) });
+      //               return localTime.utc().format('HH:mm');
+      //           });
+      //           return `${startTime} - ${endTime}`;
+      //       });
+      //   });
+      // }
+      
 
       console.log(utcWorkingHours);
       const newResourceData = {
         name: name,
         description: description,
-        workingHours: utcWorkingHours
+        duration: duration
       
       };
       // Add email if provided

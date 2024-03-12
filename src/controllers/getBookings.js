@@ -20,7 +20,7 @@ async function getBookings(req, res) {
       defaultQuery = {};
     } else if (user.role === 'Agent') {
       // Agent can only view their own bookings
-      defaultQuery = { creator: userId };
+      defaultQuery = {};
     } else {
       // Unauthorized user role
       return res.status(403).json({ error: 'Unauthorized' });
@@ -96,6 +96,12 @@ async function getBookings(req, res) {
     defaultQuery.status = req.query.status;
   }
 
+  if(req.query.creatorId){
+    console.log("CreatorId called", req.query.creatorId)
+    defaultQuery.creator = req.query.creatorId;
+  
+  }
+
   if (req.query.resource) {
     console.log("Resource filter applied");
     const resource = await Resources.findOne({ name: req.query.resource });
@@ -117,6 +123,10 @@ if (req.query.service) {
         return res.status(404).json({ error: 'Service not found' });
     }
 }
+
+console.log(defaultQuery);
+
+
 
     // Query the database
     const bookings = await Bookings.find(defaultQuery);

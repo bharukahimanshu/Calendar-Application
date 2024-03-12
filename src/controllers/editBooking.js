@@ -45,9 +45,9 @@ async function editBooking(req, res) {
       return res.status(404).json({ error: 'Booking not found' });
     }
 
-    if (booking.creator.toString()!== userId.toString()) {
-      return res.status(403).json({ error: 'You are not authorized to edit this booking' });
-    }
+    // if (booking.creator.toString()!== userId.toString()) {
+    //   return res.status(403).json({ error: 'You are not authorized to edit this booking' });
+    // }
 
     // Update  properties with the provided fields
     const previousStatus = booking.status;
