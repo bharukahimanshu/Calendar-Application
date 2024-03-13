@@ -1,7 +1,7 @@
 const Resources = require('../models/resources');
 const Service = require('../models/services'); // Require Service model
 const Booking = require('../models/bookings'); // Require Booking model
-
+const moment = require('moment-timezone');
 // Route to get all resources with populated service and booking information
 async function getAllResources(req, res){
   try {
@@ -37,6 +37,40 @@ async function getAllResources(req, res){
         return booking ? { _id: booking._id, title: booking.title } : null;
       }));
 
+      const workingHours = {};
+      // Object.keys(resource.workingHours).forEach(day => {
+      //   const dayWorkingHours = resource.workingHours[day].map(timeRange => {
+      //     const [start, end] = timeRange.split(' - ');
+      //     const startTime = 
+      //     const endTime = 
+      //     return `${startTime} - ${endTime}`;
+      //   });
+      //   workingHours[day] = dayWorkingHours;
+      // });
+
+      const serverTimeZone = moment.tz.guess();
+console.log('Server Timezone:', serverTimeZone);
+
+      if (resource.workingHours) {
+        Object.keys(resource.workingHours).forEach(day => {
+            workingHours[day] = resource.workingHours[day].map(timeRange => {
+                const [startTime, endTime] = timeRange.split('-').map(time => {
+                    const [hours, minutes] = time.trim().split(':');
+                    const utcTime = moment.utc({ hour: parseInt(hours), minute: parseInt(minutes)});
+                    console.log("utcTime", utcTime) // Set server's local time zone
+                    // console.log('Before conversion:', localTime.format()); // Log moment object before conversion
+                    const localTime = moment(utcTime).local();
+                    console.log("localTime", localTime)
+                    const localTimeFormatted = localTime.format('HH:mm');
+                 
+                    return localTimeFormatted;
+                });
+                return `${startTime} - ${endTime}`;
+            });
+        });
+    }
+
+
       return {
         _id: resource._id,
         name: resource.name,
@@ -46,7 +80,7 @@ async function getAllResources(req, res){
         duration: bookings.duration, // Filter out null values
         email: resource.email,
         phone_no: resource.phone_no,
-        workingHours:resource.workingHours
+        workingHours:workingHours
       };
     }));
 

@@ -27,8 +27,7 @@ const resourceSchema = new mongoose.Schema({
         sunday: { type: [String], default: [] } // Array of time ranges for Sunday
       },   
     duration: {
-        type: Number,
-        required: true // Assuming duration is required for each resoure
+        type: Number // Assuming duration is required for each resoure
     },
     serviceId:[{
         type: mongoose.Schema.Types.ObjectId, 

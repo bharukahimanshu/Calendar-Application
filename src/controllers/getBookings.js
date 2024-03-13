@@ -38,7 +38,7 @@ async function getBookings(req, res) {
     // Convert the local time to ISO string format
     const userLocalISOString = userLocalTime.toISOString();
     
-    console.log("UserLocalTIme",userLocalISOString);
+    console.log("UserLocalTIme", userLocalISOString);
     
     // userISTTime.setUTCHours(0, 0, 0, 0);
     // console.log("userISTTime", userISTTime);
@@ -131,37 +131,40 @@ console.log(defaultQuery);
     // Query the database
     const bookings = await Bookings.find(defaultQuery);
 
-    // Convert retrieved datetime values from UTC to the local time of the user
     const bookingsInLocalTime = await Promise.all(bookings.map(async booking => {
-      const creatorId = booking.creator;
-      const creator = await User.findById(creatorId); // Wait for the promise to resolve
-      const serviceId= booking.service;
-      const service= await Services.findById(serviceId);
-      const resourceId = booking.resource;
-      const resource = await Resources.findById(resourceId);
+    const creatorId = booking.creator;
+    const serviceId = booking.service;
+    const resourceId = booking.resource;
 
-      
-      return {
-        _id:booking._id,
+    // Fetch creator, service, and resource concurrently
+    const [creator, service, resource] = await Promise.all([
+        creatorId ? User.findById(creatorId) : null,
+        serviceId ? Services.findById(serviceId) : null,
+        resourceId ? Resources.findById(resourceId) : null
+    ]);
+
+    return {
+        _id: booking._id,
         title: booking.title,
         description: booking.description,
         startDate: new Date(booking.startDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
-        endDate:new Date(booking.endDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
+        endDate: new Date(booking.endDate.getTime() - userUTCTime.getTimezoneOffset() * 60000),
         status: booking.status,
-        creatorPhone: creator.phone_no,
-        creatorName: creator.name,
-        creatorMail: creator.email,
+        creatorPhone: creator?.phone_no,
+        creatorName: creator?.name,
+        creatorMail: creator?.email,
         related_to: booking.related_to,
-        customerId:booking.customerId,
-        statusChangeHistory: booking.statusChangeHistory.map(change => ({
+        customerId: booking.customerId,
+        statusChangeHistory: booking.statusChangeHistory?.map(change => ({
             previousStatus: change.previousStatus,
             newStatus: change.newStatus,
             timestamp: new Date(change.timestamp.getTime() - userUTCTime.getTimezoneOffset() * 60000)
         })),
-        service: service.name,
-        resource: resource.name
-      };
-  }));
+        service: service?.name,
+        resource: resource?.name
+    };
+}));
+
   
 
     res.json(bookingsInLocalTime);

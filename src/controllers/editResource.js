@@ -18,8 +18,9 @@ async function editResource(req, res){
     if(email)existingResource.email = email;
     if(phone_no)existingResource.phone_no = phone_no;
     if(description)existingResource.description = description;
+    
+    const utcWorkingHours = {};
     if(workingHours){
-        const utcWorkingHours = {};
         Object.keys(workingHours).forEach(day => {
             utcWorkingHours[day] = workingHours[day].map(timeRange => {
                 const [startTime, endTime] = timeRange.split('-').map(time => {
@@ -30,8 +31,10 @@ async function editResource(req, res){
                 return `${startTime} - ${endTime}`;
             });
         });
-        existingResource.workingHours = utcWorkingHours;
+ 
     }
+    console.log(utcWorkingHours);
+    existingResource.workingHours = utcWorkingHours;
     if(duration)existingResource.duration = duration;
 
     // Save the updated resource

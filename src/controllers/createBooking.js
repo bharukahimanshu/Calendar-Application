@@ -92,6 +92,9 @@ async function createBooking(req, res) {
       resource.bookings.push(booking._id);
       await resource.save();
 
+      service.bookings.push(booking._id);
+      await service.save();
+
       res.send('Booking created successfully!');
     }
     else{
