@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema({
         default: 'Agent'       
 
     },
+    tasks:[{
+        type:mongoose.Schema.Types.ObjectId, 
+        ref:'tasks'
+    }],
 
     eventsAttending: [
         { 
