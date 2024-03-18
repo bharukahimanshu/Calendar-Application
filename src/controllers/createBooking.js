@@ -79,7 +79,7 @@ async function createBooking(req, res) {
         endDate: bookingEndDateUTC,
         customerId: customer._id,
         related_to: req.body.related_to,
-        status: req.body.status || 'Open',
+        status: req.body.status || 'Pending',
         creator: creator._id,
         service: service._id,
         resource: resource._id
