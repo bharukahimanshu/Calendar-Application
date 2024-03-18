@@ -37,8 +37,9 @@ async function editBooking(req, res) {
     console.log("old resource", oldResourceId, "old service", oldServiceId);
 
     const resource = await Resources.findOne({name: resourceName})
-    console.log("New resource", resource._id);
+    
     if(resource){
+      console.log("New resource", resource._id);
       booking.resource = resource._id;
     }
     else{

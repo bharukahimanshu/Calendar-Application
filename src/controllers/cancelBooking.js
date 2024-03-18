@@ -24,12 +24,22 @@ async function cancelBooking(req, res){
     // Remove the booking from the resource's bookings array
     const updatedBookings = resource.bookings.filter(id => id.toString() !== bookingId);
     resource.bookings = updatedBookings;
-
     // Save the updated resource
     await resource.save();
 
-    // Delete the booking
-    // await Booking.findByIdAndDelete(bookingId);
+
+    //find the service associated with the booking
+    const serviceId = booking.service;
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    // Remove the booking from the service's bookings array
+    const updatedServiceBookings = service.bookings.filter(id => id.toString() !== bookingId);
+    service.bookings = updatedServiceBookings;
+
+    await service.save();
 
     const previousStatus= booking.status;
     booking.status = 'Cancelled';
