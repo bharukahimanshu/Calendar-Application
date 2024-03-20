@@ -26,23 +26,7 @@ const UserSchema = new mongoose.Schema({
     tasks:[{
         type:mongoose.Schema.Types.ObjectId, 
         ref:'tasks'
-    }],
-
-    eventsAttending: [
-        { 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'events' 
-        }],
-    maybeAttending: [
-        { 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'events' 
-        }],
-    eventInvitations: [
-        { 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'events' 
-        }],
+    }]
 });
 
 const users = mongoose.model("users", UserSchema);

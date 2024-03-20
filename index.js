@@ -5,19 +5,13 @@ const session = require('express-session');
 const passport = require('passport');
 const MongoStore = require('connect-mongo');
 const authRoutes = require('./src/routes/authRoutes.js');
-const rsvp = require('./src/routes/rsvp.js');
-const createEvents = require('./src/routes/createEvents.js');
 const createBookings = require('./src/routes/createBookings.js');
 const getBookings = require('./src/routes/getBookings.js');
-const editEvents = require('./src/routes/editEvents.js');
 const editBooking = require('./src/routes/editBooking.js');
 const home = require('./src/routes/home.js');
-const invitations = require('./src/routes/invitations.js');
-const deleteEvent = require('./src/routes/deleteEvent.js');
 const { connectToMongoDB } = require('./mongodb.js');
 const flash = require('connect-flash');
 const cors = require('cors');
-const eventDetails = require('./src/routes/eventDetails.js');
 const addService = require('./src/routes/addService.js');
 const addResource = require('./src/routes/addResource.js');
 const getServices = require('./src/routes/getServices.js');
@@ -72,19 +66,7 @@ connectToMongoDB();
 
 app.use('/auth', authRoutes);
 
-app.use('/api', rsvp);
-
-app.use('/api', createEvents);
-
-app.use('/api', eventDetails);
-
 app.use('/api', home);
-
-app.use('/api', invitations);
-
-app.use('/api', editEvents);
-
-app.use('/api', deleteEvent);
 
 app.use('/api', createBookings);
 

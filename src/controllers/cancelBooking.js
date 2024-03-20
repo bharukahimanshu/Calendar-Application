@@ -1,6 +1,7 @@
 const Booking = require('../models/bookings');
 const Resource = require('../models/resources');
 const logStatusChange = require('../controllers/statusLogger');
+const Service = require('../models/services')
 
 // DELETE route to cancel a booking
 
