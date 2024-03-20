@@ -102,6 +102,12 @@ async function getBookings(req, res) {
   
   }
 
+  if(req.query.creatorName){
+    const id = await User.findOne({name: req.query.creatorName});
+    console.log("Creator Name called", req.query.creatorName, id);
+    defaultQuery.creator= id;
+  }
+
   if (req.query.resource) {
     console.log("Resource filter applied");
     const resource = await Resources.findOne({ name: req.query.resource });
